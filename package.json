@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "./build.sh && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,5 +13,10 @@
   "devDependencies": {
     "ts-proto": "^1.166.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.13",
+    "long": "^5.2.3",
+    "protobufjs": "^7.2.5"
   }
 }
