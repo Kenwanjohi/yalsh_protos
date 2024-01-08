@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "./build.sh && tsc",
+    "postbuild": "cp src/links/* ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

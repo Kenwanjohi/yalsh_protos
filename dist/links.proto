@@ -1,0 +1,32 @@
+syntax="proto3";
+
+package linksPackage;
+
+message NoParamRequest {}
+
+message Link {
+  int32 id = 1;
+  string url = 2;
+  string key = 3;
+  int64 created_at = 4;
+}
+
+message CreateLinkRequest {
+  int32 user_id = 1;
+  string url = 2;
+  string key = 3;
+  int64 created_at = 4;
+}
+
+message CreateLinkResponse {
+  int32 link_id = 1;
+}
+
+message GetLinksResponse {
+  repeated Link links = 1;
+}
+
+service Links {
+  rpc CreateLink(CreateLinkRequest) returns(CreateLinkResponse);
+  rpc GetLinks(NoParamRequest) returns(GetLinksResponse);
+}
