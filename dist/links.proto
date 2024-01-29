@@ -2,24 +2,30 @@ syntax="proto3";
 
 package linksPackage;
 
-message NoParamRequest {}
+import "google/protobuf/timestamp.proto";
+
 
 message Link {
-  int32 id = 1;
+  int32 link_id = 1;
   string url = 2;
   string key = 3;
-  int64 created_at = 4;
+  int32 clicks = 4;
 }
 
 message CreateLinkRequest {
   int32 user_id = 1;
   string url = 2;
   string key = 3;
-  int64 created_at = 4;
+  optional google.protobuf.Timestamp expires_at = 4;
+  optional string password = 5;
 }
 
 message CreateLinkResponse {
   int32 link_id = 1;
+}
+
+message GetLinksRequest {
+  int32 user_id = 1;
 }
 
 message GetLinksResponse {
@@ -28,5 +34,5 @@ message GetLinksResponse {
 
 service Links {
   rpc CreateLink(CreateLinkRequest) returns(CreateLinkResponse);
-  rpc GetLinks(NoParamRequest) returns(GetLinksResponse);
+  rpc GetLinks(GetLinksRequest) returns(GetLinksResponse);
 }

@@ -8,87 +8,46 @@ import type {
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
-import Long from "long";
-import _m0 from "protobufjs/minimal";
+import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "../google/protobuf/timestamp";
 
 export const protobufPackage = "linksPackage";
 
-export interface NoParamRequest {
-}
-
 export interface Link {
-  id: number;
+  linkId: number;
   url: string;
   key: string;
-  createdAt: number;
+  clicks: number;
 }
 
 export interface CreateLinkRequest {
   userId: number;
   url: string;
   key: string;
-  createdAt: number;
+  expiresAt?: Date | undefined;
+  password?: string | undefined;
 }
 
 export interface CreateLinkResponse {
   linkId: number;
 }
 
+export interface GetLinksRequest {
+  userId: number;
+}
+
 export interface GetLinksResponse {
   links: Link[];
 }
 
-function createBaseNoParamRequest(): NoParamRequest {
-  return {};
-}
-
-export const NoParamRequest = {
-  encode(_: NoParamRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NoParamRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNoParamRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): NoParamRequest {
-    return {};
-  },
-
-  toJSON(_: NoParamRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NoParamRequest>, I>>(base?: I): NoParamRequest {
-    return NoParamRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NoParamRequest>, I>>(_: I): NoParamRequest {
-    const message = createBaseNoParamRequest();
-    return message;
-  },
-};
-
 function createBaseLink(): Link {
-  return { id: 0, url: "", key: "", createdAt: 0 };
+  return { linkId: 0, url: "", key: "", clicks: 0 };
 }
 
 export const Link = {
   encode(message: Link, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).int32(message.id);
+    if (message.linkId !== 0) {
+      writer.uint32(8).int32(message.linkId);
     }
     if (message.url !== "") {
       writer.uint32(18).string(message.url);
@@ -96,8 +55,8 @@ export const Link = {
     if (message.key !== "") {
       writer.uint32(26).string(message.key);
     }
-    if (message.createdAt !== 0) {
-      writer.uint32(32).int64(message.createdAt);
+    if (message.clicks !== 0) {
+      writer.uint32(32).int32(message.clicks);
     }
     return writer;
   },
@@ -114,7 +73,7 @@ export const Link = {
             break;
           }
 
-          message.id = reader.int32();
+          message.linkId = reader.int32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -135,7 +94,7 @@ export const Link = {
             break;
           }
 
-          message.createdAt = longToNumber(reader.int64() as Long);
+          message.clicks = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -148,17 +107,17 @@ export const Link = {
 
   fromJSON(object: any): Link {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      linkId: isSet(object.linkId) ? globalThis.Number(object.linkId) : 0,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       key: isSet(object.key) ? globalThis.String(object.key) : "",
-      createdAt: isSet(object.createdAt) ? globalThis.Number(object.createdAt) : 0,
+      clicks: isSet(object.clicks) ? globalThis.Number(object.clicks) : 0,
     };
   },
 
   toJSON(message: Link): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.linkId !== 0) {
+      obj.linkId = Math.round(message.linkId);
     }
     if (message.url !== "") {
       obj.url = message.url;
@@ -166,8 +125,8 @@ export const Link = {
     if (message.key !== "") {
       obj.key = message.key;
     }
-    if (message.createdAt !== 0) {
-      obj.createdAt = Math.round(message.createdAt);
+    if (message.clicks !== 0) {
+      obj.clicks = Math.round(message.clicks);
     }
     return obj;
   },
@@ -177,16 +136,16 @@ export const Link = {
   },
   fromPartial<I extends Exact<DeepPartial<Link>, I>>(object: I): Link {
     const message = createBaseLink();
-    message.id = object.id ?? 0;
+    message.linkId = object.linkId ?? 0;
     message.url = object.url ?? "";
     message.key = object.key ?? "";
-    message.createdAt = object.createdAt ?? 0;
+    message.clicks = object.clicks ?? 0;
     return message;
   },
 };
 
 function createBaseCreateLinkRequest(): CreateLinkRequest {
-  return { userId: 0, url: "", key: "", createdAt: 0 };
+  return { userId: 0, url: "", key: "", expiresAt: undefined, password: undefined };
 }
 
 export const CreateLinkRequest = {
@@ -200,8 +159,11 @@ export const CreateLinkRequest = {
     if (message.key !== "") {
       writer.uint32(26).string(message.key);
     }
-    if (message.createdAt !== 0) {
-      writer.uint32(32).int64(message.createdAt);
+    if (message.expiresAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.expiresAt), writer.uint32(34).fork()).ldelim();
+    }
+    if (message.password !== undefined) {
+      writer.uint32(42).string(message.password);
     }
     return writer;
   },
@@ -235,11 +197,18 @@ export const CreateLinkRequest = {
           message.key = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.createdAt = longToNumber(reader.int64() as Long);
+          message.expiresAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.password = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -255,7 +224,8 @@ export const CreateLinkRequest = {
       userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       key: isSet(object.key) ? globalThis.String(object.key) : "",
-      createdAt: isSet(object.createdAt) ? globalThis.Number(object.createdAt) : 0,
+      expiresAt: isSet(object.expiresAt) ? fromJsonTimestamp(object.expiresAt) : undefined,
+      password: isSet(object.password) ? globalThis.String(object.password) : undefined,
     };
   },
 
@@ -270,8 +240,11 @@ export const CreateLinkRequest = {
     if (message.key !== "") {
       obj.key = message.key;
     }
-    if (message.createdAt !== 0) {
-      obj.createdAt = Math.round(message.createdAt);
+    if (message.expiresAt !== undefined) {
+      obj.expiresAt = message.expiresAt.toISOString();
+    }
+    if (message.password !== undefined) {
+      obj.password = message.password;
     }
     return obj;
   },
@@ -284,7 +257,8 @@ export const CreateLinkRequest = {
     message.userId = object.userId ?? 0;
     message.url = object.url ?? "";
     message.key = object.key ?? "";
-    message.createdAt = object.createdAt ?? 0;
+    message.expiresAt = object.expiresAt ?? undefined;
+    message.password = object.password ?? undefined;
     return message;
   },
 };
@@ -342,6 +316,63 @@ export const CreateLinkResponse = {
   fromPartial<I extends Exact<DeepPartial<CreateLinkResponse>, I>>(object: I): CreateLinkResponse {
     const message = createBaseCreateLinkResponse();
     message.linkId = object.linkId ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetLinksRequest(): GetLinksRequest {
+  return { userId: 0 };
+}
+
+export const GetLinksRequest = {
+  encode(message: GetLinksRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== 0) {
+      writer.uint32(8).int32(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetLinksRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetLinksRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.userId = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetLinksRequest {
+    return { userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0 };
+  },
+
+  toJSON(message: GetLinksRequest): unknown {
+    const obj: any = {};
+    if (message.userId !== 0) {
+      obj.userId = Math.round(message.userId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetLinksRequest>, I>>(base?: I): GetLinksRequest {
+    return GetLinksRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetLinksRequest>, I>>(object: I): GetLinksRequest {
+    const message = createBaseGetLinksRequest();
+    message.userId = object.userId ?? 0;
     return message;
   },
 };
@@ -418,8 +449,8 @@ export const LinksService = {
     path: "/linksPackage.Links/GetLinks",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: NoParamRequest) => Buffer.from(NoParamRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => NoParamRequest.decode(value),
+    requestSerialize: (value: GetLinksRequest) => Buffer.from(GetLinksRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => GetLinksRequest.decode(value),
     responseSerialize: (value: GetLinksResponse) => Buffer.from(GetLinksResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer) => GetLinksResponse.decode(value),
   },
@@ -427,7 +458,7 @@ export const LinksService = {
 
 export interface LinksServer extends UntypedServiceImplementation {
   createLink: handleUnaryCall<CreateLinkRequest, CreateLinkResponse>;
-  getLinks: handleUnaryCall<NoParamRequest, GetLinksResponse>;
+  getLinks: handleUnaryCall<GetLinksRequest, GetLinksResponse>;
 }
 
 export interface LinksClient extends Client {
@@ -447,16 +478,16 @@ export interface LinksClient extends Client {
     callback: (error: ServiceError | null, response: CreateLinkResponse) => void,
   ): ClientUnaryCall;
   getLinks(
-    request: NoParamRequest,
+    request: GetLinksRequest,
     callback: (error: ServiceError | null, response: GetLinksResponse) => void,
   ): ClientUnaryCall;
   getLinks(
-    request: NoParamRequest,
+    request: GetLinksRequest,
     metadata: Metadata,
     callback: (error: ServiceError | null, response: GetLinksResponse) => void,
   ): ClientUnaryCall;
   getLinks(
-    request: NoParamRequest,
+    request: GetLinksRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetLinksResponse) => void,
@@ -481,16 +512,26 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function toTimestamp(date: Date): Timestamp {
+  const seconds = Math.trunc(date.getTime() / 1_000);
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
 }
 
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function fromTimestamp(t: Timestamp): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof globalThis.Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new globalThis.Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
 }
 
 function isSet(value: any): boolean {
