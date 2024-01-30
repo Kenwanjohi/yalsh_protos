@@ -19,11 +19,9 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
           scope: "@yalsh"
 
-      - name: protoc compiler
-        uses: arduino/setup-protoc@master
-        with:
-          version: "3.x"
-
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v2.1.0
+            
       - name: build scripts
         run: |
           pnpm install
