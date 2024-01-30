@@ -1,39 +1,19 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LinksClient = exports.LinksService = exports.GetLinksResponse = exports.GetLinksRequest = exports.CreateLinkResponse = exports.CreateLinkRequest = exports.Link = exports.protobufPackage = void 0;
 /* eslint-disable */
 const grpc_js_1 = require("@grpc/grpc-js");
-const _m0 = __importStar(require("protobufjs/minimal"));
-const timestamp_1 = require("../google/protobuf/timestamp");
+const minimal_js_1 = __importDefault(require("protobufjs/minimal.js"));
+const timestamp_js_1 = require("../google/protobuf/timestamp.js");
 exports.protobufPackage = "linksPackage";
 function createBaseLink() {
     return { linkId: 0, url: "", key: "", clicks: 0 };
 }
 exports.Link = {
-    encode(message, writer = _m0.Writer.create()) {
+    encode(message, writer = minimal_js_1.default.Writer.create()) {
         if (message.linkId !== 0) {
             writer.uint32(8).int32(message.linkId);
         }
@@ -49,7 +29,7 @@ exports.Link = {
         return writer;
     },
     decode(input, length) {
-        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        const reader = input instanceof minimal_js_1.default.Reader ? input : minimal_js_1.default.Reader.create(input);
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = createBaseLink();
         while (reader.pos < end) {
@@ -128,7 +108,7 @@ function createBaseCreateLinkRequest() {
     return { userId: 0, url: "", key: "", expiresAt: undefined, password: undefined };
 }
 exports.CreateLinkRequest = {
-    encode(message, writer = _m0.Writer.create()) {
+    encode(message, writer = minimal_js_1.default.Writer.create()) {
         if (message.userId !== 0) {
             writer.uint32(8).int32(message.userId);
         }
@@ -139,7 +119,7 @@ exports.CreateLinkRequest = {
             writer.uint32(26).string(message.key);
         }
         if (message.expiresAt !== undefined) {
-            timestamp_1.Timestamp.encode(toTimestamp(message.expiresAt), writer.uint32(34).fork()).ldelim();
+            timestamp_js_1.Timestamp.encode(toTimestamp(message.expiresAt), writer.uint32(34).fork()).ldelim();
         }
         if (message.password !== undefined) {
             writer.uint32(42).string(message.password);
@@ -147,7 +127,7 @@ exports.CreateLinkRequest = {
         return writer;
     },
     decode(input, length) {
-        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        const reader = input instanceof minimal_js_1.default.Reader ? input : minimal_js_1.default.Reader.create(input);
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = createBaseCreateLinkRequest();
         while (reader.pos < end) {
@@ -175,7 +155,7 @@ exports.CreateLinkRequest = {
                     if (tag !== 34) {
                         break;
                     }
-                    message.expiresAt = fromTimestamp(timestamp_1.Timestamp.decode(reader, reader.uint32()));
+                    message.expiresAt = fromTimestamp(timestamp_js_1.Timestamp.decode(reader, reader.uint32()));
                     continue;
                 case 5:
                     if (tag !== 42) {
@@ -237,14 +217,14 @@ function createBaseCreateLinkResponse() {
     return { linkId: 0 };
 }
 exports.CreateLinkResponse = {
-    encode(message, writer = _m0.Writer.create()) {
+    encode(message, writer = minimal_js_1.default.Writer.create()) {
         if (message.linkId !== 0) {
             writer.uint32(8).int32(message.linkId);
         }
         return writer;
     },
     decode(input, length) {
-        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        const reader = input instanceof minimal_js_1.default.Reader ? input : minimal_js_1.default.Reader.create(input);
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = createBaseCreateLinkResponse();
         while (reader.pos < end) {
@@ -288,14 +268,14 @@ function createBaseGetLinksRequest() {
     return { userId: 0 };
 }
 exports.GetLinksRequest = {
-    encode(message, writer = _m0.Writer.create()) {
+    encode(message, writer = minimal_js_1.default.Writer.create()) {
         if (message.userId !== 0) {
             writer.uint32(8).int32(message.userId);
         }
         return writer;
     },
     decode(input, length) {
-        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        const reader = input instanceof minimal_js_1.default.Reader ? input : minimal_js_1.default.Reader.create(input);
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = createBaseGetLinksRequest();
         while (reader.pos < end) {
@@ -339,14 +319,14 @@ function createBaseGetLinksResponse() {
     return { links: [] };
 }
 exports.GetLinksResponse = {
-    encode(message, writer = _m0.Writer.create()) {
+    encode(message, writer = minimal_js_1.default.Writer.create()) {
         for (const v of message.links) {
             exports.Link.encode(v, writer.uint32(10).fork()).ldelim();
         }
         return writer;
     },
     decode(input, length) {
-        const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+        const reader = input instanceof minimal_js_1.default.Reader ? input : minimal_js_1.default.Reader.create(input);
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = createBaseGetLinksResponse();
         while (reader.pos < end) {
@@ -426,7 +406,7 @@ function fromJsonTimestamp(o) {
         return new globalThis.Date(o);
     }
     else {
-        return fromTimestamp(timestamp_1.Timestamp.fromJSON(o));
+        return fromTimestamp(timestamp_js_1.Timestamp.fromJSON(o));
     }
 }
 function isSet(value) {
