@@ -32,7 +32,16 @@ message GetLinksResponse {
   repeated Link links = 1;
 }
 
+message LinkLookupRequest {
+  string key = 1;
+}
+
+message LinkLookupResponse {
+  string url = 2;
+}
+
 service Links {
   rpc CreateLink(CreateLinkRequest) returns(CreateLinkResponse);
   rpc GetLinks(GetLinksRequest) returns(GetLinksResponse);
+  rpc LinkLookup(LinkLookupRequest) returns (LinkLookupResponse);
 }
